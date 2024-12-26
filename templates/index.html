@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-adsense-account" content="ca-pub-8144988903369506">
+    <title>Gymnastics Scheduler</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8144988903369506" crossorigin="anonymous"></script>
+</head>
+<body>
+    <!-- Help Modal -->
+    <div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="helpModalLabel">How to Use the Gymnastics Scheduler</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="help-section">
+                        <h6>Getting Started</h6>
+                        <p>Welcome to the Gymnastics Scheduler! This tool helps you create and manage gymnastics training schedules efficiently. Here's how to use it:</p>
+
+                        <h6>1. Basic Setup</h6>
+                        <ul>
+                            <li>Set the overall schedule time range using the "Start Time" and "End Time" inputs</li>
+                            <li>Choose your preferred time interval (15, 30, or 60 minutes)</li>
+                            <li>Select a theme to customize the appearance</li>
+                        </ul>
+
+                        <h6>2. Creating Groups and Events</h6>
+                        <ul>
+                            <li>Add training groups with their specific time restrictions</li>
+                            <li>Create event locations (like "Bars A", "Floor", etc.)</li>
+                            <li>Groups will only be scheduled within their designated time slots</li>
+                        </ul>
+
+                        <h6>3. Scheduling Sessions</h6>
+                        <ul>
+                            <li>Select a group and event location</li>
+                            <li>Set the session duration</li>
+                            <li>Click "Schedule" to add the session</li>
+                            <li>Drag and drop sessions to adjust their timing and location</li>
+                        </ul>
+
+                        <h6>4. Saving Your Work (Important!)</h6>
+                        <ul>
+                            <li><strong>Export JSON File:</strong> Always export your schedule as a JSON file to save your work. This is crucial as schedules are not permanently stored on the server.</li>
+                            <li>Use the "Save" or "Save As" buttons to temporarily store different versions</li>
+                            <li>Import previously exported JSON files to restore your schedules</li>
+                        </ul>
+
+                        <h6>5. Additional Features</h6>
+                        <ul>
+                            <li>Add a header image and text to customize your schedule</li>
+                            <li>Download a PDF version that matches the web view</li>
+                            <li>Switch between different themes to find your preferred style</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add the PDF Orientation Modal after the Help Modal -->
+    <div class="modal fade" id="pdfOrientationModal" tabindex="-1" aria-labelledby="pdfOrientationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="pdfOrientationModalLabel">Choose PDF Orientation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-around">
+                        <button class="btn btn-outline-primary orientation-btn" data-orientation="portrait">
+                            <i data-feather="file"></i>
+                            Portrait
+                        </button>
+                        <button class="btn btn-outline-primary orientation-btn" data-orientation="landscape">
+                            <i data-feather="file"></i>
+                            Landscape
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i data-feather="activity"></i> Gymnastics Scheduler
+            </a>
+            <button class="btn btn-info help-button ms-2" data-bs-toggle="modal" data-bs-target="#helpModal">
+                <i data-feather="help-circle"></i> Help
+            </button>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Configuration Panel -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Schedule Configuration</h5>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Theme</label>
+                            <select class="form-control" id="themeSelector">
+                                <option value="default">Default</option>
+                                <option value="dark">Dark</option>
+                                <option value="energetic">Energetic</option>
+                                <option value="nature">Nature</option>
+                                <option value="calm">Calm</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="mb-3">
+                            <label class="form-label">Schedule Configuration</label>
+                            <div class="input-group mb-2">
+                                <input type="text" class="form-control" id="headerText" placeholder="Header Text">
+                            </div>
+                            <div class="input-group mb-2">
+                                <input type="text" class="form-control" id="headerImageUrl" placeholder="Header Image URL">
+                            </div>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="scheduleNameInput" placeholder="Schedule Name">
+                                <button class="btn btn-primary" id="saveSchedule">Save</button>
+                                <button class="btn btn-outline-primary" id="saveAsSchedule">Save As</button>
+                                <select class="form-control" id="loadScheduleSelect">
+                                    <option value="">Load Schedule...</option>
+                                </select>
+                            </div>
+                            <div class="mt-2">
+                                <button class="btn btn-outline-secondary" id="exportSchedule">
+                                    <i data-feather="download"></i> Export JSON
+                                </button>
+                                <!-- Update the download PDF button to trigger the orientation modal -->
+                                <button class="btn btn-outline-secondary" id="downloadPdf" data-bs-toggle="modal" data-bs-target="#pdfOrientationModal">
+                                    <i data-feather="file-text"></i> Download PDF
+                                </button>
+                                <label class="btn btn-outline-secondary mb-0">
+                                    <i data-feather="upload"></i> Import
+                                    <input type="file" id="importSchedule" accept=".json" style="display: none;">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Start Time</label>
+                            <input type="time" class="form-control" id="startTime" value="15:30">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">End Time</label>
+                            <input type="time" class="form-control" id="endTime" value="20:30">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Interval (minutes)</label>
+                            <select class="form-control" id="timeInterval">
+                                <option value="15">15</option>
+                                <option value="30" selected>30</option>
+                                <option value="60">60</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Management Section -->
+        <div class="row mb-4">
+            <!-- Groups Management -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Groups</h5>
+                        <div class="mb-3">
+                            <input type="text" class="form-control mb-2" id="newGroupName" placeholder="New Group Name">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label">Start Time</label>
+                                    <input type="time" class="form-control" id="newGroupStartTime">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">End Time</label>
+                                    <input type="time" class="form-control" id="newGroupEndTime">
+                                </div>
+                            </div>
+                            <button class="btn btn-primary w-100 mt-3" id="addGroup">Add Group</button>
+                        </div>
+                        <ul class="list-group" id="groupsList"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Events Management -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Events</h5>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="newEventName" placeholder="New Event Location">
+                            <button class="btn btn-primary" id="addEvent">Add Event</button>
+                        </div>
+                        <ul class="list-group" id="eventsList"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Session Creation -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Create Session</h5>
+                <div class="row">
+                    <div class="col-md-4">
+                        <select class="form-control mb-3" id="sessionGroup">
+                            <option value="">Select Group</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-control mb-3" id="sessionEvent">
+                            <option value="">Select Event</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" class="form-control mb-3" id="sessionDuration" placeholder="Duration (min)" min="30" step="30" value="60">
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary w-100" id="createSession">Schedule</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schedule Display -->
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Daily Schedule</h5>
+                <div class="schedule-container" id="scheduleGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Google AdSense Container -->
+    <div class="ad-container mt-4">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-8144988903369506"
+             data-ad-slot="gymnastics-scheduler-ad"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="{{ url_for('static', filename='js/scheduler.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
+    <script>
+        feather.replace();
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</body>
+</html>

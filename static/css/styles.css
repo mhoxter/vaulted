@@ -1,0 +1,299 @@
+/* Add these styles to the existing CSS file */
+.schedule-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.schedule-header-image {
+    max-width: 200px;
+    max-height: 100px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    margin: 0 auto 10px;
+    display: block;
+}
+
+.schedule-header-text {
+    font-size: 24px;
+    color: var(--text-color);
+    margin: 10px 0;
+    text-align: center;
+}
+
+::root {
+    --primary-color: #3498db;
+    --secondary-color: #2980b9;
+    --background-color: #f8f9fa;
+    --text-color: #2c3e50;
+    --accent-color: #e74c3c;
+}
+
+body {
+    background-color: var(--background-color);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: var(--text-color);
+}
+
+.navbar {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+}
+
+.navbar-brand {
+    color: var(--background-color) !important;
+    font-weight: bold;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    transition: all 0.3s ease;
+    opacity: 1 !important;  /* Make buttons always visible */
+    display: inline-flex !important;  /* Ensure consistent display */
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    transform: scale(1.05);
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    opacity: 1 !important;  /* Make buttons always visible */
+    display: inline-flex !important;  /* Ensure consistent display */
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.schedule-container {
+    display: grid;
+    gap: 1px;
+    background-color: #eee;
+    overflow-x: auto;
+}
+
+.time-slot {
+    background-color: white;
+    padding: 4px;
+    border: 1px solid #ddd;
+    min-height: 40px;
+    height: 40px;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.event-header {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    padding: 8px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.time-label {
+    background-color: var(--secondary-color);
+    color: var(--background-color);
+    padding: 8px;
+    text-align: right;
+    font-size: 0.85rem;  /* Reduced font size for time labels */
+}
+
+.session-block {
+    color: #ffffff;
+    padding: 4px;
+    border-radius: 4px;
+    cursor: move;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    animation: fadeIn 0.3s ease-in;
+    position: absolute;
+    width: calc(100% - 8px);
+    left: 4px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    z-index: 1000;
+    user-select: none;
+    transition: opacity 0.2s ease;
+    height: calc((var(--duration-slots) * 40px) - 1px);
+    top: 0;
+    margin: 0;
+    overflow: hidden;
+    font-size: 0.8rem;  /* Reduced font size for session blocks */
+    line-height: 1.2;   /* Tighter line height */
+}
+
+.session-block span {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 2px;
+}
+
+.session-delete-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;  /* Slightly smaller delete button */
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    flex-shrink: 0;
+}
+
+.session-delete-btn:hover {
+    opacity: 1;
+}
+
+.time-slot {
+    position: relative;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 1rem;
+    }
+
+    .schedule-container {
+        font-size: 0.9rem;
+    }
+
+    .time-slot {
+        min-height: 40px;
+        padding: 4px;
+    }
+}
+
+.ad-container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 1rem;
+    text-align: center;
+    background-color: var(--background-color);
+}
+
+.ad-container ins.adsbygoogle {
+    margin: 0 auto;
+    display: block;
+    background-color: transparent;
+}
+
+/* Help Modal Styles */
+.help-button {
+    color: white;
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+.help-button i {
+    width: 18px;
+    height: 18px;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.help-section h6 {
+    color: var(--primary-color);
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+.help-section h6:first-child {
+    margin-top: 0;
+}
+
+.help-section p {
+    color: var(--text-color);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.help-section ul {
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.help-section li {
+    color: var(--text-color);
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+}
+
+.help-section strong {
+    color: var(--accent-color);
+}
+
+.modal-content {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+    border-bottom: 2px solid #eee;
+    padding: 1.25rem 1.5rem;
+}
+
+.modal-footer {
+    border-top: 2px solid #eee;
+    padding: 1.25rem 1.5rem;
+}
+
+/* PDF Orientation Modal Styles */
+.orientation-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 20px;
+    width: 120px;
+    transition: all 0.3s ease;
+}
+
+.orientation-btn i {
+    width: 24px;
+    height: 24px;
+}
+
+.orientation-btn[data-orientation="landscape"] i {
+    transform: rotate(90deg);
+}
+
+.orientation-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
