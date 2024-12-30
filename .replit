@@ -1,0 +1,4 @@
+run = "py main.py"
+
+[deployment]
+run = ["sh", "-c", "py main.py"]
