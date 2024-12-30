@@ -1,4 +1,5 @@
-run = "py main.py"
+
+run = "python app.py"
 
 [deployment]
-run = ["sh", "-c", "py main.py"]
+run = ["sh", "-c", "python app.py"]
