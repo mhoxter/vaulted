@@ -21,7 +21,7 @@
     text-align: center;
 }
 
-::root {
+:root {
     --primary-color: #3498db;
     --secondary-color: #2980b9;
     --background-color: #f8f9fa;
